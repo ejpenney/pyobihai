@@ -109,11 +109,27 @@ class PyObihai:
             _LOGGER.error(e)
         return mac
 
-    def get_device_serial(self):
-        """Get the device serial number."""
+    def get_model_name(self) -> str:
+        """Get ModelName."""
+        return self._get_product_info("ModelName")
+
+    def get_hardware_version(self) -> str:
+        """Get HardwareVersion."""
+        return self._get_product_info("HardwareVersion")
+
+    def get_software_version(self) -> str:
+        """Get SoftwareVersion."""
+        return self._get_product_info("SoftwareVersion")
+
+    def get_device_serial(self) -> str:
+        """Get Device Serial Number."""
+        return self._get_product_info("SerialNumber")
+
+    def _get_product_info(self, parameter: str) -> str:
+        """Get the device Product Information."""
 
         url = urljoin(self._server, DEFAULT_STATUS_PATH)
-        serial = None
+        result = None
         try: 
             resp = requests.get(url, auth=requests.auth.HTTPDigestAuth(self._username,self._password), timeout=2)
             root = xml.etree.ElementTree.fromstring(resp.text)
@@ -124,7 +140,7 @@ class PyObihai:
                         serial = e.attrib.get('current')
         except requests.exceptions.RequestException as e:
             _LOGGER.error(e)
-        return serial
+        return result
 
     def get_call_direction(self):
         """Get the call direction."""
