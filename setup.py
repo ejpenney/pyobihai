@@ -5,14 +5,14 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="pyobihai",
-    version="1.3.2",
-    author="Daniel Shokouhi",
-    author_email="dshokouhi@gmail.com",
+    version="1.4.0",
+    author="Emory Penney",
+    author_email="treadstoneit@gmail.com",
     description="A Python wrapper for Obihai",
     license="MIT",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/dshokouhi/pyobihai",
+    url="https://github.com/ejpenney/pyobihai",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
