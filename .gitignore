@@ -2,3 +2,5 @@ pyobihai.egg-info
 **/__pycache__
 venv
 dist
+.coverage
+.vscode

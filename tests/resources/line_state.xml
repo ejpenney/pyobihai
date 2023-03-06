@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="default.xsl"?>
+<model reboot_req="false" >
+	<object name="Port Status" status="true" access="readOnly" provision="false" columnNum="1" subtitle="PHONE1 Port" trspec="nFxsPorts" minEntries="1" maxEntries="1" >
+		<pagetype type="Double Status" default="no" secondName="no" ></pagetype>
+		<pagetitle >
+PHONE Port Status
+</pagetitle>
+		<description >
+Physical interface -- Phone port Status
+</description>
+		<parameter name="State" access="readOnly" >
+			<description >
+Port status, such as on-hook, off-hook, ringing
+</description>
+			<syntax >
+				<string ></string>
+			</syntax>
+			<value hash="9faa5b84" type="input" default=" " current="On Hook" ></value>
+		</parameter>
+		<parameter name="LoopCurrent" access="readOnly" >
+			<description >
+Loop current in mA
+</description>
+			<syntax >
+				<string ></string>
+			</syntax>
+			<value hash="afd1a780" type="input" default=" " current="1 mA" ></value>
+		</parameter>
+		<parameter name="VBAT" access="readOnly" >
+			<description >
+Battery voltage in volts
+</description>
+			<syntax >
+				<string ></string>
+			</syntax>
+			<value hash="5a2cbf70" type="input" default=" " current="56 V (11.4 V)" ></value>
+		</parameter>
+		<parameter name="TipRingVoltage" access="readOnly" >
+			<description >
+Sensed differential Tip/Ring voltage in volts
+</description>
+			<syntax >
+				<string ></string>
+			</syntax>
+			<value hash="c310e3f2" type="input" default=" " current="45 V" ></value>
+		</parameter>
+		<parameter name="LastCallerInfo" access="readOnly" >
+			<description >
+Caller ID of previous call
+</description>
+			<syntax >
+				<string ></string>
+			</syntax>
+			<value hash="5729ae56" type="input" default=" " current="&apos;&apos; 15552345678" ></value>
+		</parameter>
+	</object>
+</model>

@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="./style.css" rel="stylesheet" type="text/css" />
+    <title>Call Status</title>
+    <script type="text/javascript">
+      function click_record(p) {
+        var a;
+        a = "record.au?port=" + p;
+        document.forms[0].action = a;
+        document.forms[0].submit();
+      }
+      function click_record_stop(p) {
+        var a;
+        a = "record_stop.au?port=" + p;
+        document.forms[0].action = a;
+        document.forms[0].submit();
+      }
+    </script>
+  </head>
+
+  <body id="pagebody">
+    <img
+      src="./caution.png"
+      border="0"
+      height="50px"
+      alt="www.obihai.com"
+      style="top: 5px; right: 20px; position: fixed"
+    />
+    <div class="content">
+      <div align="right">
+        <font class="fontss" size="5">Call Status</font>
+      </div>
+      <div>&nbsp;</div>
+      <table cellpadding="1" cellspacing="1" class="option" width="100%">
+        <tr bgcolor="#ffffff">
+          <td height="32">Number of Active Calls: 0</td>
+        </tr>
+      </table>
+      <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+      <div class="OptionDiv" style="text-align: center">
+        Copyright&copy; 2018 Polycom, Inc.
+      </div>
+    </div>
+  </body>
+</html>

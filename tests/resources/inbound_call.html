@@ -1,0 +1,266 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="./style.css" rel="stylesheet" type="text/css" />
+    <title>Call Status</title>
+    <script type="text/javascript">
+      function click_record(p) {
+        var a;
+        a = "record.au?port=" + p;
+        document.forms[0].action = a;
+        document.forms[0].submit();
+      }
+      function click_record_stop(p) {
+        var a;
+        a = "record_stop.au?port=" + p;
+        document.forms[0].action = a;
+        document.forms[0].submit();
+      }
+    </script>
+  </head>
+
+  <body id="pagebody">
+    <img
+      src="./caution.png"
+      border="0"
+      height="50px"
+      alt="www.obihai.com"
+      style="top: 5px; right: 20px; position: fixed"
+    />
+    <div class="content">
+      <div align="right">
+        <font class="fontss" size="5">Call Status</font>
+      </div>
+      <div>&nbsp;</div>
+      <table cellpadding="1" cellspacing="1" class="option" width="100%">
+        <tr bgcolor="#ffffff"><td height="32">Number of Active Calls: 1</tr>
+      </table>
+      <table cellpadding="1" cellspacing="1" class="option" width="100%">
+        <tr bgcolor="#ff8800">
+          <td height="24">
+            <table>
+              <tr bgcolor="#ff8800">
+                <td>
+                  Call 1 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                <td>
+                  <form action="./callstatus.htm?item=0x689ed8" method="post">
+                    <input
+                      class="buttoninput"
+                      type="submit"
+                      name="sbmt"
+                      value="Remove"
+                    />
+                    <input
+                      class="buttoninput"
+                      type="button"
+                      value="Record"
+                      onClick="click_record(0)"
+                    />
+                  </form>
+
+              </tr>
+            </table>
+          <td>Terminal 1
+          <td>Terminal 2
+        </tr>
+        <tr bgcolor="#ffffff">
+          <td>Terminal ID
+          <td>SP2
+          <td>PHONE1
+        </tr>
+
+        <tr bgcolor="#eeeeee">
+          <td>State
+          <td>connected
+          <td>connected
+        </tr>
+
+        <tr bgcolor="#ffffff">
+          <td>Peer Name
+          <td>
+          <td>
+        </tr>
+
+        <tr bgcolor="#eeeeee">
+          <td>Peer Number
+          <td>+15551234567
+          <td>
+        </tr>
+
+        <tr bgcolor="#ffffff">
+          <td>Start Time
+          <td>14:28:19
+          <td>14:28:19
+        </tr>
+
+        <tr bgcolor="#eeeeee">
+          <td>Duration
+          <td>00:00:03
+          <td>00:00:03
+        </tr>
+
+        <tr bgcolor="#ffffff">
+          <td>Direction
+          <td>Inbound
+          <td>Inbound
+        </tr>
+
+        <tr bgcolor="#eeeeee">
+          <td>Peer RTP Address
+          <td>11.111.11.111:26500
+          <td>
+        </tr>
+
+        <tr bgcolor="#ffffff">
+          <td>Local RTP Address
+          <td>192.168.1.100:16806
+          <td>
+        </tr>
+
+        <tr bgcolor="#eeeeee">
+          <td>RTP Transport
+          <td>UDP
+          <td>
+        </tr>
+
+        <tr bgcolor="#ffffff">
+          <td>Audio Codec
+          <td>tx=G711U; rx=G711U
+          <td>
+        </tr>
+
+        <tr bgcolor="#eeeeee">
+          <td>RTP Packetization (ms)
+          <td>tx=20; rx=20
+          <td>
+        </tr>
+
+        <tr bgcolor="#ffffff">
+          <td>RTP Packet Count
+          <td>tx=172; rx=296
+          <td>
+        </tr>
+
+        <tr bgcolor="#eeeeee">
+          <td>RTP Byte Count
+          <td>tx=29584; rx=50912
+          <td>
+        </tr>
+
+        <tr bgcolor="#ffffff">
+          <td>Peer Clock Differential Rate
+          <td>0 PPM
+          <td>
+        </tr>
+
+        <tr bgcolor="#eeeeee">
+          <td>Packets In Jitter Buffer
+          <td>5
+          <td>
+        </tr>
+
+        <tr bgcolor="#ffffff">
+          <td>Packets Out-Of-Order
+          <td>0
+          <td>
+        </tr>
+
+        <tr bgcolor="#eeeeee">
+          <td>Packets (10ms) Interpolated
+          <td>10
+          <td>
+        </tr>
+
+        <tr bgcolor="#ffffff">
+          <td>Packets Late (Dropped)
+          <td>0
+          <td>
+        </tr>
+
+        <tr bgcolor="#eeeeee">
+          <td>Packets Lost
+          <td>0
+          <td>
+        </tr>
+
+        <tr bgcolor="#ffffff">
+          <td>Packet Loss Rate
+          <td>0 %
+          <td>
+        </tr>
+
+        <tr bgcolor="#eeeeee">
+          <td>Packet Drop Rate
+          <td>0 %
+          <td>
+        </tr>
+
+        <tr bgcolor="#ffffff">
+          <td>Jitter Buffer Length
+          <td>90 ms
+          <td>
+        </tr>
+
+        <tr bgcolor="#eeeeee">
+          <td>Received Interarrival Jitter
+          <td>11 ms
+          <td>
+        </tr>
+
+        <tr bgcolor="#ffffff">
+          <td>DTMF Digits Received
+          <td>0
+          <td>
+        </tr>
+
+        <tr bgcolor="#eeeeee">
+          <td>Jitter Buffer Underruns
+          <td>0
+          <td>
+        </tr>
+
+        <tr bgcolor="#ffffff">
+          <td>Jitter Buffer Overruns
+          <td>0
+          <td>
+        </tr>
+
+        <tr bgcolor="#eeeeee">
+          <td>Sequence number discontinuities
+          <td>0
+          <td>
+        </tr>
+
+        <tr bgcolor="#ffffff">
+          <td>skew compensation
+          <td>0 ms
+          <td>
+        </tr>
+
+        <tr bgcolor="#eeeeee">
+          <td>send silence
+          <td>0
+          <td>
+        </tr>
+
+        <tr bgcolor="#ffffff">
+          <td>MOS
+          <td>4.42
+          <td>
+        </tr>
+
+        <tr bgcolor="#eeeeee">
+          <td>
+          <td>
+          <td>
+        </tr>
+      </table>
+      <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+      <div class="OptionDiv" style="text-align: center">
+        Copyright&copy; 2018 Polycom, Inc.
+      </div>
+    </div>
+  </body>
+</html>
