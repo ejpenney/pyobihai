@@ -2,6 +2,7 @@
 """Test pyobihai."""
 
 import datetime
+from typing import Callable
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -25,7 +26,7 @@ _GET_REQUEST_PATCH = "pyobihai.PyObihai._get_request"
 pytestmark = pytest.mark.usefixtures("mock_response")
 
 
-def test_get_line_state():
+def test_get_line_state() -> None:
     """Test PyObihai.get_line_state"""
 
     with patch(_GET_REQUEST_PATCH, MagicMock(return_value=LINE_STATE_XML)):
@@ -54,7 +55,7 @@ def test_get_line_state():
         ),
     ],
 )
-def test_get_status(to_call: callable, expected_result: str):
+def test_get_status(to_call: Callable, expected_result: str) -> None:
     """Test PyObihai device info functions."""
 
     with patch(_GET_REQUEST_PATCH, MagicMock(return_value=STATUS_XML)):
@@ -64,7 +65,7 @@ def test_get_status(to_call: callable, expected_result: str):
     assert result == expected_result
 
 
-def test_get_state():
+def test_get_state() -> None:
     """Test PyObihai.get_line_state"""
 
     with patch(_GET_REQUEST_PATCH, MagicMock(return_value=STATUS_XML)):
@@ -102,7 +103,11 @@ def test_get_state():
         pytest.param(PyObihai.call_reboot, STATUS_XML, True, id="reboot_success"),
     ],
 )
-def test_services(to_call: callable, response: MockResponse, expected_result: bool):
+def test_services(
+    to_call: Callable,
+    response: MockResponse,
+    expected_result: bool,
+) -> None:
     """Test PyObihai services functions."""
 
     with patch("pyobihai.requests.get", MagicMock(return_value=response)):
@@ -112,7 +117,7 @@ def test_services(to_call: callable, response: MockResponse, expected_result: bo
     assert result == expected_result
 
 
-def test_failed_get_request():
+def test_failed_get_request() -> None:
     """Test PyObihai._get_request() logs an error."""
 
     side_effect = RequestException("Failure")
@@ -125,7 +130,7 @@ def test_failed_get_request():
     assert result is False
 
 
-def test_non_admin_user():
+def test_non_admin_user() -> None:
     """Test PyObihai generates a user URL."""
 
     my_obi = PyObihai("192.168.1.100", "user", "password")
@@ -140,7 +145,7 @@ def test_non_admin_user():
         pytest.param(OUTBOUND_CALL_HTML, "Outbound Call", id="outbound_call"),
     ],
 )
-def test_get_call_direction(response, expected_result):
+def test_get_call_direction(response: MockResponse, expected_result: str) -> None:
     """Test PyObihai call direction lookup."""
 
     with patch(_GET_REQUEST_PATCH, MagicMock(return_value=response)):

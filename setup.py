@@ -21,6 +21,7 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     install_requires=[
-        "requests", "defusedxml",
+        "requests",
+        "defusedxml",
     ],
 )

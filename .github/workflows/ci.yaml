@@ -1,0 +1,32 @@
+---
+name: PyObihai CI Checks
+
+on: push
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    name: Checks
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.x
+      - run: pip install --upgrade pip
+      - run: pip install black pylint mypy types-requests isort ruff
+      - run: black --diff --check $(git ls-files '*.py')
+      - run: pylint --disable=all --enable=unused-import $(git ls-files '*.py')
+      - run: mypy --strict $(git ls-files '*.py')
+      - run: isort -c $(git ls-files '*.py')
+      - run: ruff check $(git ls-files '*.py')
+  pytest:
+    runs-on: ubuntu-latest
+    name: Pytest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.x
+      - run: pip install --upgrade pip
+      - run: pip install pytest pytest-cov
+      - run: pip install -r requirements.txt
+      - run: pytest --cov-fail-under=90 --cov ./pyobihai
