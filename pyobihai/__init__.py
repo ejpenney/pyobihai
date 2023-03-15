@@ -39,18 +39,20 @@ class PyObihai:
             root = fromstring(resp.text)
             for models in root.iter("model"):
                 if "reboot_req" in models.attrib and models.attrib["reboot_req"]:
-                    services["Reboot Required"] = models.attrib["reboot_req"]
+                    services["Reboot required"] = models.attrib["reboot_req"]
             for obj in root.findall("object"):
                 name = obj.attrib.get("name", "")
                 if "Service Status" in name:
                     status = parse_status(name, obj)
                     if isinstance(status, str):
-                        services[name] = status
+                        services[
+                            name.replace("Service Status", "service status")
+                        ] = status
                 if "Product Information" in name:
                     state = parse_last_reboot(obj)
                     if abs(self._last_reboot - state) > timedelta(seconds=5):
                         self._last_reboot = state
-                    services["Last Reboot"] = self._last_reboot
+                    services["Last reboot"] = self._last_reboot
 
         return services
 
@@ -63,14 +65,14 @@ class PyObihai:
             root = fromstring(resp.text)
             for obj in root.findall("object"):
                 name = obj.attrib.get("name", "")
-                subtitle = obj.attrib.get("subtitle", "")
+                subtitle = obj.attrib.get("subtitle", "").replace("Port", "port")
                 if "Port Status" in name:
                     for exc in obj.findall("./parameter[@name='State']/value"):
                         state = exc.attrib.get("current")
                         services[subtitle] = state
                     for val in obj.findall("./parameter[@name='LastCallerInfo']/value"):
                         state = val.attrib.get("current", "")
-                        services[subtitle + " Last Caller Info"] = state.replace(
+                        services[subtitle + " last caller info"] = state.replace(
                             "'", ""
                         ).strip()
 
@@ -131,12 +133,12 @@ class PyObihai:
     def get_call_direction(self) -> dict[str, str]:
         """Get the call direction."""
 
-        call_direction = {"Call Direction": "No Active Calls"}
+        call_direction = {"Call direction": "No Active Calls"}
         response = self._get_request(DEFAULT_CALL_STATUS_PATH)
         if isinstance(response, requests.Response):
             result = parse_call_direction(response.text)
             if isinstance(result, str):
-                call_direction["Call Direction"] = result
+                call_direction["Call direction"] = result
 
         return call_direction
 

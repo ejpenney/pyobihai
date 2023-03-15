@@ -34,8 +34,8 @@ def test_get_line_state() -> None:
         line_state = my_obi.get_line_state()
 
     assert line_state == {
-        "PHONE1 Port": "On Hook",
-        "PHONE1 Port Last Caller Info": "15552345678",
+        "PHONE1 port": "On Hook",
+        "PHONE1 port last caller info": "15552345678",
     }
 
 
@@ -83,12 +83,12 @@ def test_get_state() -> None:
     )
 
     assert status == {
-        "Reboot Required": "false",
-        "Last Reboot": last_reboot,
-        "SP1 Service Status": "0",
-        "SP2 Service Status": "0",
-        "SP4 Service Status": "0",
-        "OBiTALK Service Status": "Normal",
+        "Reboot required": "false",
+        "Last reboot": last_reboot,
+        "SP1 service status": "0",
+        "SP2 service status": "0",
+        "SP4 service status": "0",
+        "OBiTALK service status": "Normal",
     }
 
 
@@ -152,4 +152,4 @@ def test_get_call_direction(response: MockResponse, expected_result: str) -> Non
         my_obi = PyObihai(*MOCK_LOGIN)
         result = my_obi.get_call_direction()
 
-    assert result == {"Call Direction": expected_result}
+    assert result == {"Call direction": expected_result}
