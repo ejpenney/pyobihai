@@ -23,14 +23,14 @@ class PyObihai:
     def __init__(self, host: str, username: str, password: str):
         """Initialize connection."""
 
-        self._username = username
-        self._password = password
+        self._username: str = username
+        self._password: str = password
         if self._username == "user":
             host = host + "/user/"
-        self._server = f"http://{host}"
-        self._last_reboot = datetime.now(timezone.utc)
-        self._last_status_check = self._last_reboot
-        self._cached_status = None
+        self._server: str = f"http://{host}"
+        self._last_reboot: datetime = datetime.now(tz=timezone.utc)
+        self._last_status_check: datetime = self._last_reboot
+        self._cached_status: requests.Response | bool = False
 
     def get_state(self) -> dict[str, Any]:
         """Get the state for services sensors, phone sensor and last reboot."""
@@ -104,7 +104,7 @@ class PyObihai:
         """Get and parse the device Product Information."""
 
         result = ""
-        if (not self._cached_status or self._last_status_check < self._last_reboot):
+        if self._cached_status is False or self._last_status_check < self._last_reboot:
             self._cached_status = self._get_request(DEFAULT_STATUS_PATH)
             self._last_status_check = self._last_reboot
         if isinstance(self._cached_status, requests.Response):

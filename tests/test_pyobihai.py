@@ -29,8 +29,8 @@ pytestmark = pytest.mark.usefixtures("mock_response")
 def test_get_line_state() -> None:
     """Test PyObihai.get_line_state"""
 
+    my_obi = PyObihai(*MOCK_LOGIN)
     with patch(_GET_REQUEST_PATCH, MagicMock(return_value=LINE_STATE_XML)):
-        my_obi = PyObihai(*MOCK_LOGIN)
         line_state = my_obi.get_line_state()
 
     assert line_state == {
@@ -58,22 +58,57 @@ def test_get_line_state() -> None:
 def test_get_status(to_call: Callable, expected_result: str) -> None:
     """Test PyObihai device info functions."""
 
-    with patch(_GET_REQUEST_PATCH, MagicMock(return_value=STATUS_XML)):
-        my_obi = PyObihai(*MOCK_LOGIN)
+    my_obi = PyObihai(*MOCK_LOGIN)
+    with patch(_GET_REQUEST_PATCH, MagicMock(return_value=STATUS_XML)) as mock_request:
         result = to_call(my_obi)
 
+    mock_request.assert_called_once()
     assert result == expected_result
+
+    # Verify we use the cache after querying.
+    mock_request.reset_mock()
+    cached_result = to_call(my_obi)
+    assert cached_result == expected_result
+    mock_request.assert_not_called()
+
+
+def test_get_status_from_cache() -> None:
+    """Test PyObihai device info functions don't query the device if we have (reasonably) up-to-date data."""
+
+    my_obi = PyObihai(*MOCK_LOGIN)
+    my_obi._cached_status = STATUS_XML
+
+    with patch(_GET_REQUEST_PATCH, MagicMock()) as mock_request:
+        my_obi._get_status("Product Information", "HardwareVersion")
+
+    mock_request.assert_not_called()
+
+
+def test_get_status_cache_update() -> None:
+    """Test PyObihai device info functions update the cache after Obihai reboots."""
+
+    my_obi = PyObihai(*MOCK_LOGIN)
+    my_obi._cached_status = MockResponse("GARBAGE_DATA", 200)
+    my_obi._last_status_check = datetime.datetime.now(
+        tz=datetime.timezone.utc
+    ) - datetime.timedelta(hours=1)
+
+    with patch(_GET_REQUEST_PATCH, MagicMock(return_value=STATUS_XML)) as mock_request:
+        result = my_obi._get_status("Product Information", "HardwareVersion")
+
+    assert result == "1.4"
+    mock_request.assert_called()
 
 
 def test_get_state() -> None:
     """Test PyObihai.get_line_state"""
 
+    my_obi = PyObihai(*MOCK_LOGIN)
     with patch(_GET_REQUEST_PATCH, MagicMock(return_value=STATUS_XML)):
-        my_obi = PyObihai(*MOCK_LOGIN)
         status = my_obi.get_state()
 
     # I'm worried these could potentially not match up
-    now = datetime.datetime.now(datetime.timezone.utc)
+    now = datetime.datetime.now(tz=datetime.timezone.utc)
     last_reboot = now - datetime.timedelta(
         days=7,
         hours=0,
@@ -110,8 +145,8 @@ def test_services(
 ) -> None:
     """Test PyObihai services functions."""
 
+    my_obi = PyObihai(*MOCK_LOGIN)
     with patch("pyobihai.requests.get", MagicMock(return_value=response)):
-        my_obi = PyObihai(*MOCK_LOGIN)
         result = to_call(my_obi)
 
     assert result == expected_result
@@ -148,21 +183,8 @@ def test_non_admin_user() -> None:
 def test_get_call_direction(response: MockResponse, expected_result: str) -> None:
     """Test PyObihai call direction lookup."""
 
+    my_obi = PyObihai(*MOCK_LOGIN)
     with patch(_GET_REQUEST_PATCH, MagicMock(return_value=response)):
-        my_obi = PyObihai(*MOCK_LOGIN)
         result = my_obi.get_call_direction()
 
     assert result == {"Call direction": expected_result}
-
-
-def test_get_status_cache() -> None:
-    """Test PyObihai device info functions."""
-    my_obi = PyObihai(*MOCK_LOGIN)
-
-    with patch(_GET_REQUEST_PATCH, MagicMock(return_value=STATUS_XML)):
-        cache_value = my_obi._get_status("Product Information", "HardwareVersion")
-
-    with patch(_GET_REQUEST_PATCH, MagicMock(return_value=LINE_STATE_XML)):
-        result = my_obi._get_status("Product Information", "HardwareVersion")
-
-    assert cache_value == result

@@ -1,8 +1,7 @@
 """Retrieve PyObihai files."""
 
-import os
-import time
 import logging
+import os
 from urllib.parse import urljoin
 
 import requests
