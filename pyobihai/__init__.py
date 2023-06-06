@@ -29,6 +29,8 @@ class PyObihai:
             host = host + "/user/"
         self._server = f"http://{host}"
         self._last_reboot = datetime.now(timezone.utc)
+        self._last_status_check = self._last_reboot
+        self._cached_status = None
 
     def get_state(self) -> dict[str, Any]:
         """Get the state for services sensors, phone sensor and last reboot."""
@@ -102,9 +104,11 @@ class PyObihai:
         """Get and parse the device Product Information."""
 
         result = ""
-        resp = self._get_request(DEFAULT_STATUS_PATH)
-        if isinstance(resp, requests.Response):
-            root = fromstring(resp.text)
+        if (not self._cached_status or self._last_status_check < self._last_reboot):
+            self._cached_status = self._get_request(DEFAULT_STATUS_PATH)
+            self._last_status_check = self._last_reboot
+        if isinstance(self._cached_status, requests.Response):
+            root = fromstring(self._cached_status.text)
             for obj in root.findall("object"):
                 name = obj.attrib.get("name", "")
                 if find_name in name:

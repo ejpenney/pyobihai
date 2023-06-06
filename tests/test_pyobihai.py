@@ -153,3 +153,16 @@ def test_get_call_direction(response: MockResponse, expected_result: str) -> Non
         result = my_obi.get_call_direction()
 
     assert result == {"Call direction": expected_result}
+
+
+def test_get_status_cache() -> None:
+    """Test PyObihai device info functions."""
+    my_obi = PyObihai(*MOCK_LOGIN)
+
+    with patch(_GET_REQUEST_PATCH, MagicMock(return_value=STATUS_XML)):
+        cache_value = my_obi._get_status("Product Information", "HardwareVersion")
+
+    with patch(_GET_REQUEST_PATCH, MagicMock(return_value=LINE_STATE_XML)):
+        result = my_obi._get_status("Product Information", "HardwareVersion")
+
+    assert cache_value == result
