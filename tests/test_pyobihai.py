@@ -79,7 +79,7 @@ def test_get_status_from_cache() -> None:
     my_obi._cached_status = STATUS_XML
 
     with patch(_GET_REQUEST_PATCH, MagicMock()) as mock_request:
-        my_obi._get_status("Product Information", "HardwareVersion")
+        my_obi._get_device_info("Product Information", "HardwareVersion")
 
     mock_request.assert_not_called()
 
@@ -94,7 +94,7 @@ def test_get_status_cache_update() -> None:
     ) - datetime.timedelta(hours=1)
 
     with patch(_GET_REQUEST_PATCH, MagicMock(return_value=STATUS_XML)) as mock_request:
-        result = my_obi._get_status("Product Information", "HardwareVersion")
+        result = my_obi._get_device_info("Product Information", "HardwareVersion")
 
     assert result == "1.4"
     mock_request.assert_called()
@@ -118,12 +118,12 @@ def test_get_state() -> None:
     )
 
     assert status == {
-        "Reboot required": "false",
-        "Last reboot": last_reboot,
-        "SP1 service status": "0",
-        "SP2 service status": "0",
-        "SP4 service status": "0",
-        "OBiTALK service status": "Normal",
+        "Reboot Required": "false",
+        "Last Reboot": last_reboot,
+        "SP1 Service Status": "0",
+        "SP2 Service Status": "0",
+        "SP4 Service Status": "0",
+        "OBiTALK Service Status": "Normal",
     }
 
 
@@ -187,4 +187,4 @@ def test_get_call_direction(response: MockResponse, expected_result: str) -> Non
     with patch(_GET_REQUEST_PATCH, MagicMock(return_value=response)):
         result = my_obi.get_call_direction()
 
-    assert result == {"Call direction": expected_result}
+    assert result == {"Call Direction": expected_result}
