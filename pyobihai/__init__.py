@@ -132,9 +132,9 @@ class PyObihai:
             )
             if response.status_code == 200:
                 return response
-        except requests.RequestException as exc:
-            LOGGER.error(exc)
-            raise RuntimeError(f"Unable to query {url}") from exc
+        except requests.exceptions.RequestException as exc:
+            LOGGER.debug(exc)
+            raise type(exc) from exc
 
         return False
 
