@@ -6,7 +6,7 @@ from typing import Callable
 from unittest.mock import MagicMock, patch
 
 import pytest
-from requests import RequestException
+from requests.exceptions import RequestException
 
 from pyobihai import PyObihai
 
@@ -29,13 +29,13 @@ pytestmark = pytest.mark.usefixtures("mock_response")
 def test_get_line_state() -> None:
     """Test PyObihai.get_line_state"""
 
+    my_obi = PyObihai(*MOCK_LOGIN)
     with patch(_GET_REQUEST_PATCH, MagicMock(return_value=LINE_STATE_XML)):
-        my_obi = PyObihai(*MOCK_LOGIN)
         line_state = my_obi.get_line_state()
 
     assert line_state == {
-        "PHONE1 port": "On Hook",
-        "PHONE1 port last caller info": "15552345678",
+        "PHONE1 Port": "On Hook",
+        "PHONE1 Port last caller info": "15552345678",
     }
 
 
@@ -58,22 +58,60 @@ def test_get_line_state() -> None:
 def test_get_status(to_call: Callable, expected_result: str) -> None:
     """Test PyObihai device info functions."""
 
-    with patch(_GET_REQUEST_PATCH, MagicMock(return_value=STATUS_XML)):
-        my_obi = PyObihai(*MOCK_LOGIN)
+    my_obi = PyObihai(*MOCK_LOGIN)
+    with patch(_GET_REQUEST_PATCH, MagicMock(return_value=STATUS_XML)) as mock_request:
         result = to_call(my_obi)
 
+    mock_request.assert_called_once()
     assert result == expected_result
+
+    # Verify we use the cache after querying.
+    mock_request.reset_mock()
+    cached_result = to_call(my_obi)
+    assert cached_result == expected_result
+    mock_request.assert_not_called()
+
+
+def test_get_status_from_cache() -> None:
+    """
+    Test PyObihai device info functions don't query the device if we have
+    (reasonably) up-to-date data.
+    """
+
+    my_obi = PyObihai(*MOCK_LOGIN)
+    my_obi._cached_status = STATUS_XML
+
+    with patch(_GET_REQUEST_PATCH, MagicMock()) as mock_request:
+        my_obi._get_device_info("Product Information", "HardwareVersion")
+
+    mock_request.assert_not_called()
+
+
+def test_get_status_cache_update() -> None:
+    """Test PyObihai device info functions update the cache after Obihai reboots."""
+
+    my_obi = PyObihai(*MOCK_LOGIN)
+    my_obi._cached_status = MockResponse("GARBAGE_DATA", 200)
+    my_obi._last_status_check = datetime.datetime.now(
+        tz=datetime.timezone.utc
+    ) - datetime.timedelta(hours=1)
+
+    with patch(_GET_REQUEST_PATCH, MagicMock(return_value=STATUS_XML)) as mock_request:
+        result = my_obi._get_device_info("Product Information", "HardwareVersion")
+
+    assert result == "1.4"
+    mock_request.assert_called()
 
 
 def test_get_state() -> None:
     """Test PyObihai.get_line_state"""
 
+    my_obi = PyObihai(*MOCK_LOGIN)
     with patch(_GET_REQUEST_PATCH, MagicMock(return_value=STATUS_XML)):
-        my_obi = PyObihai(*MOCK_LOGIN)
         status = my_obi.get_state()
 
     # I'm worried these could potentially not match up
-    now = datetime.datetime.now(datetime.timezone.utc)
+    now = datetime.datetime.now(tz=datetime.timezone.utc)
     last_reboot = now - datetime.timedelta(
         days=7,
         hours=0,
@@ -83,12 +121,12 @@ def test_get_state() -> None:
     )
 
     assert status == {
-        "Reboot required": "false",
-        "Last reboot": last_reboot,
-        "SP1 service status": "0",
-        "SP2 service status": "0",
-        "SP4 service status": "0",
-        "OBiTALK service status": "Normal",
+        "Reboot Required": "false",
+        "Last Reboot": last_reboot,
+        "SP1 Service Status": "0",
+        "SP2 Service Status": "0",
+        "SP4 Service Status": "0",
+        "OBiTALK Service Status": "Normal",
     }
 
 
@@ -110,8 +148,8 @@ def test_services(
 ) -> None:
     """Test PyObihai services functions."""
 
+    my_obi = PyObihai(*MOCK_LOGIN)
     with patch("pyobihai.requests.get", MagicMock(return_value=response)):
-        my_obi = PyObihai(*MOCK_LOGIN)
         result = to_call(my_obi)
 
     assert result == expected_result
@@ -121,13 +159,13 @@ def test_failed_get_request() -> None:
     """Test PyObihai._get_request() logs an error."""
 
     side_effect = RequestException("Failure")
-    with patch("pyobihai.requests.get", side_effect=side_effect):
-        with patch("pyobihai.LOGGER.error") as logger:
-            my_obi = PyObihai(*MOCK_LOGIN)
-            result = my_obi._get_request("testing")
+    with pytest.raises(RequestException):
+        with patch("pyobihai.requests.get", side_effect=side_effect):
+            with patch("pyobihai.LOGGER.debug") as logger:
+                my_obi = PyObihai(*MOCK_LOGIN)
+                my_obi._get_request("testing")
 
-    logger.assert_called_once_with(side_effect)
-    assert result is False
+    logger.assert_called_with(side_effect)
 
 
 def test_non_admin_user() -> None:
@@ -148,8 +186,8 @@ def test_non_admin_user() -> None:
 def test_get_call_direction(response: MockResponse, expected_result: str) -> None:
     """Test PyObihai call direction lookup."""
 
+    my_obi = PyObihai(*MOCK_LOGIN)
     with patch(_GET_REQUEST_PATCH, MagicMock(return_value=response)):
-        my_obi = PyObihai(*MOCK_LOGIN)
         result = my_obi.get_call_direction()
 
-    assert result == {"Call direction": expected_result}
+    assert result == {"Call Direction": expected_result}

@@ -4,3 +4,4 @@ venv
 dist
 .coverage
 .vscode
+.venv

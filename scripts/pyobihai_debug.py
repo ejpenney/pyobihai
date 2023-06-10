@@ -1,8 +1,7 @@
 """Retrieve PyObihai files."""
 
-import os
-import time
 import logging
+import os
 from urllib.parse import urljoin
 
 import requests
@@ -44,7 +43,7 @@ def get_xml(xml_name: str) -> None:
         xml_fh.write(_get_request(xml_name))
 
 
-def main():
+def main() -> None:
     """Entry point."""
     get_xml(DEFAULT_STATUS_PATH)
     get_xml(DEFAULT_LINE_PATH)

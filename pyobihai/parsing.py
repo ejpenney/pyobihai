@@ -1,7 +1,7 @@
 """Obihai Result Parsers."""
 
 from datetime import datetime, timedelta, timezone
-from xml.etree.ElementTree import Element
+from xml.etree.ElementTree import Element  # nosec
 
 
 def parse_last_reboot(obj: Element) -> datetime:
@@ -10,7 +10,7 @@ def parse_last_reboot(obj: Element) -> datetime:
     for exc in obj.findall("./parameter[@name='UpTime']/value"):
         days = exc.attrib.get("current", "").split()[0]
         tstamp = datetime.strptime(exc.attrib.get("current", "").split()[2], "%H:%M:%S")
-        now = datetime.now(timezone.utc)
+        now = datetime.now(tz=timezone.utc)
         state = now - timedelta(
             days=float(days),
             hours=tstamp.hour,

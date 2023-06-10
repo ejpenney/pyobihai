@@ -1,0 +1,3 @@
+types-requests
+pytest
+pytest-cov
