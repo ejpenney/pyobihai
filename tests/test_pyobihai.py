@@ -73,7 +73,10 @@ def test_get_status(to_call: Callable, expected_result: str) -> None:
 
 
 def test_get_status_from_cache() -> None:
-    """Test PyObihai device info functions don't query the device if we have (reasonably) up-to-date data."""
+    """
+    Test PyObihai device info functions don't query the device if we have
+    (reasonably) up-to-date data.
+    """
 
     my_obi = PyObihai(*MOCK_LOGIN)
     my_obi._cached_status = STATUS_XML

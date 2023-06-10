@@ -123,7 +123,7 @@ class PyObihai:
         """Get a URL from the Obihai."""
 
         url = urljoin(self._server, api_url)
-        LOGGER.debug("Querying: %s" % url)
+        LOGGER.debug("Querying: %s", url)
         try:
             response = requests.get(
                 url,
