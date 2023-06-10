@@ -6,7 +6,7 @@ from typing import Callable
 from unittest.mock import MagicMock, patch
 
 import pytest
-from requests import RequestException
+from requests.exceptions import RequestException
 
 from pyobihai import PyObihai
 
@@ -34,8 +34,8 @@ def test_get_line_state() -> None:
         line_state = my_obi.get_line_state()
 
     assert line_state == {
-        "PHONE1 port": "On Hook",
-        "PHONE1 port last caller info": "15552345678",
+        "PHONE1 Port": "On Hook",
+        "PHONE1 Port last caller info": "15552345678",
     }
 
 
@@ -156,13 +156,13 @@ def test_failed_get_request() -> None:
     """Test PyObihai._get_request() logs an error."""
 
     side_effect = RequestException("Failure")
-    with patch("pyobihai.requests.get", side_effect=side_effect):
-        with patch("pyobihai.LOGGER.error") as logger:
-            my_obi = PyObihai(*MOCK_LOGIN)
-            result = my_obi._get_request("testing")
+    with pytest.raises(RequestException):
+        with patch("pyobihai.requests.get", side_effect=side_effect):
+            with patch("pyobihai.LOGGER.debug") as logger:
+                my_obi = PyObihai(*MOCK_LOGIN)
+                my_obi._get_request("testing")
 
-    logger.assert_called_once_with(side_effect)
-    assert result is False
+    logger.assert_called_with(side_effect)
 
 
 def test_non_admin_user() -> None:
